@@ -1,0 +1,19 @@
+[project]
+name = "z-image-turbo-server"
+version = "0.1.0"
+description = "Z-Image-Turbo Server providing OpenAI-compatible Text-to-Image API"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "fastapi",
+    "uvicorn",
+    "python-dotenv",
+    "transformers",
+    "accelerate",
+    "torch",
+    "sentencepiece",
+    "protobuf",
+    "diffusers>=0.30.0" 
+]
+# Using a recent version of diffusers likely supports it given the PRs mentioned were merged. 
+# If not, we can switch to git dependency.
