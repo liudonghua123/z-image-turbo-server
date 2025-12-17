@@ -5,6 +5,8 @@ class Settings(BaseSettings):
     MODEL_ID: str = "Tongyi-MAI/Z-Image-Turbo"
     DEVICE: str = "cuda"
     DTYPE: str = "bfloat16" # 'float16' or 'bfloat16'
+    HOST: str = "0.0.0.0"
+    PORT: int = 8000
     
     class Config:
         env_file = ".env"
