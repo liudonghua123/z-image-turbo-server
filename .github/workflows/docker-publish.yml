@@ -32,14 +32,22 @@ jobs:
         # username: ${{ github.actor }}
         # password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ github.repository }}
+          tags: |
+            type=raw,value=v${{ inputs.version }}
+            type=raw,value=latest
+
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
           context: .
           push: true
-          tags: |
-             liudonghua123/z-image-turbo-server:${{ inputs.version }}
-             liudonghua123/z-image-turbo-server:latest
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
