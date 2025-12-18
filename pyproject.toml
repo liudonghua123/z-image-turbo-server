@@ -13,7 +13,10 @@ dependencies = [
     "torch",
     "sentencepiece",
     "protobuf",
-    "diffusers>=0.30.0" 
+
+    "diffusers>=0.30.0",
+    "pydantic-settings",
+    "pillow" 
 ]
 # Using a recent version of diffusers likely supports it given the PRs mentioned were merged. 
 # If not, we can switch to git dependency.
