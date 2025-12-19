@@ -1,5 +1,6 @@
 from fastapi import APIRouter, HTTPException, BackgroundTasks
-from app.schemas import ImageGenerationRequest, ImageGenerationResponse, ImageObject
+from app.schemas import ImageGenerationRequest, ImageGenerationResponse, ImageObject, ModelListResponse, ModelCard
+from app.config import settings
 from app.service import service
 import time
 import base64
@@ -13,6 +14,14 @@ def image_to_base64(image):
     image.save(buffered, format="PNG")
     img_str = base64.b64encode(buffered.getvalue()).decode("utf-8")
     return img_str
+
+@router.get("/v1/models", response_model=ModelListResponse)
+def list_models():
+    return ModelListResponse(
+        data=[
+            ModelCard(id=settings.MODEL_ID, created=int(time.time()), owned_by="z-image-turbo")
+        ]
+    )
 
 @router.post("/v1/images/generations", response_model=ImageGenerationResponse)
 async def generate_image(request: ImageGenerationRequest):

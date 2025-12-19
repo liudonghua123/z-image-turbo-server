@@ -15,19 +15,19 @@ class ModelService:
         self.pipe = None
 
     def load_model(self):
-        print(f"Loading model {settings.MODEL_ID}...")
+        print(f"Loading model {settings.PRETRAINED_MODEL_NAME}...")
         dtype = torch.bfloat16 if settings.DTYPE == "bfloat16" else torch.float16
         
         # If ZImagePipeline is available, use it. Otherwise rely on auto-loading via DiffusionPipeline
         if ZImagePipeline:
             self.pipe = ZImagePipeline.from_pretrained(
-                settings.MODEL_ID,
+                settings.PRETRAINED_MODEL_NAME,
                 torch_dtype=dtype,
                 low_cpu_mem_usage=False,
             )
         else:
             self.pipe = DiffusionPipeline.from_pretrained(
-                settings.MODEL_ID,
+                settings.PRETRAINED_MODEL_NAME,
                 torch_dtype=dtype,
                 low_cpu_mem_usage=False,
             )

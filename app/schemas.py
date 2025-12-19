@@ -18,3 +18,13 @@ class ImageObject(BaseModel):
 class ImageGenerationResponse(BaseModel):
     created: int
     data: List[ImageObject]
+
+class ModelCard(BaseModel):
+    id: str
+    object: str = "model"
+    created: int = 0
+    owned_by: str = "z-image-turbo"
+
+class ModelListResponse(BaseModel):
+    object: str = "list"
+    data: List[ModelCard]
