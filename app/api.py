@@ -34,7 +34,9 @@ async def generate_image(request: ImageGenerationRequest):
         }
         width, height = size_map.get(request.size, (1024, 1024))
         
-        image = service.generate(
+
+        
+        image = await service.process_request(
             prompt=request.prompt,
             width=width,
             height=height,

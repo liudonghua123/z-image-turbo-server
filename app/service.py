@@ -1,4 +1,5 @@
 import torch
+import asyncio
 from diffusers import DiffusionPipeline
 # Try importing ZImagePipeline, fallback to DiffusionPipeline if it's auto-mapped
 try:
@@ -13,6 +14,7 @@ from io import BytesIO
 class ModelService:
     def __init__(self):
         self.pipe = None
+        self.queue = asyncio.Queue()
 
     def load_model(self):
         print(f"Loading model {settings.PRETRAINED_MODEL_NAME}...")
@@ -55,5 +57,27 @@ class ModelService:
         ).images[0]
         
         return image
+
+    async def start_worker(self):
+        """Background worker to process requests from the queue."""
+        print("Starting model worker...")
+        while True:
+            params, future = await self.queue.get()
+            try:
+                # Run generation in a separate thread to avoid blocking the event loop
+                # self.generate is CPU blocking (even with GPU, the python side waits)
+                result = await asyncio.to_thread(self.generate, **params)
+                future.set_result(result)
+            except Exception as e:
+                future.set_exception(e)
+            finally:
+                self.queue.task_done()
+
+    async def process_request(self, **kwargs):
+        """Enqueue a request and wait for the result."""
+        loop = asyncio.get_running_loop()
+        future = loop.create_future()
+        await self.queue.put((kwargs, future))
+        return await future
 
 service = ModelService()
